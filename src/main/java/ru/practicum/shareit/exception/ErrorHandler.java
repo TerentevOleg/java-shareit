@@ -2,14 +2,11 @@ package ru.practicum.shareit.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.validation.ConstraintViolationException;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -42,7 +39,6 @@ public class ErrorHandler {
         return result;
     }
 
-    // Ошибка валидации полей десериализируемого объекта @Valid
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
@@ -55,35 +51,6 @@ public class ErrorHandler {
         log.warn(String.valueOf(result), exception);
         return result;
     }
-
-    // Ошибка валидации параметра запроса @Validated
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleConstraintViolationException(ConstraintViolationException exception) {
-        Map<String, String> result = Map.of("Bad Request", exception.getMessage());
-        log.warn(String.valueOf(result), exception);
-        return result;
-    }
-
-    // HttpMessageNotReadableException выбрасывается например, если отсутствует тело запроса
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
-        String message = exception.getMessage();
-        Map<String, String> result = Map.of("Bad Request", Objects.isNull(message) ? "Details unknown" : message);
-        log.warn(String.valueOf(result), exception);
-        return result;
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleMissingRequestHeaderException(MissingRequestHeaderException exception) {
-        String message = exception.getMessage();
-        Map<String, String> result = Map.of("Bad Request", Objects.isNull(message) ? "Details unknown" : message);
-        log.warn(String.valueOf(result), exception);
-        return result;
-    }
-
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
