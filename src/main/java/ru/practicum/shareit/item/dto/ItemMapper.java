@@ -17,11 +17,11 @@ public class ItemMapper {
         );
     }
 
-    public static Item fromItemDto(ItemDto dto) {
+    public static Item fromItemDto(ItemDto itemDto) {
         Item item = new Item();
-        item.setName(dto.getName());
-        item.setDescription(dto.getDescription());
-        item.setAvailable(dto.getAvailable());
+        item.setName(itemDto.getName());
+        item.setDescription(itemDto.getDescription());
+        item.setAvailable(itemDto.getAvailable());
         return item;
     }
 
