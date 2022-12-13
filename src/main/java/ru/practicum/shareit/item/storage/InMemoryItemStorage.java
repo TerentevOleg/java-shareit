@@ -11,13 +11,13 @@ import java.util.stream.Collectors;
 @Repository
 public class InMemoryItemStorage extends CrudStorageImpl<Item> implements ItemStorage {
 
-    private final Map<Long, List<Item>> userItemIndex = new LinkedHashMap<>();
+    private final Map<Long, List<Item>> userItemIndex = new HashMap<>();
 
     @Override
     public Item add(Item item) {
         item = super.add(item);
         userItemIndex
-                .computeIfAbsent(item.getOwner().getId(), ownerId -> new ArrayList<>())
+                .computeIfAbsent(item.getOwner().getId(), ownerId -> new LinkedList<>())
                 .add(item);
         return item;
     }
