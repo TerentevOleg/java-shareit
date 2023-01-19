@@ -9,6 +9,7 @@ import ru.practicum.shareit.booking.dto.BookingDtoRequest;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.dto.BookingDtoResponse;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.storage.BookingRepository;
 import ru.practicum.shareit.exception.CustomValidationException;
@@ -43,63 +44,61 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDtoResponse> getAllBookingsByBooker(long bookerId, String state) {
+    public List<BookingDtoResponse> getAllBookingsByBooker(long bookerId, BookingState state) {
         User booker = getUser(bookerId);
         List<Booking> bookings;
         LocalDateTime now = LocalDateTime.now();
         switch (state) {
-            case "PAST":
+            case PAST:
                 bookings = bookingRepository.findByBookerAndEndIsBeforeOrderByStartDesc(booker, now);
                 break;
-            case "FUTURE":
+            case FUTURE:
                 bookings = bookingRepository.findByBookerAndStartIsAfterOrderByStartDesc(booker, now);
                 break;
-            case "CURRENT":
+            case CURRENT:
                 bookings = bookingRepository.findByBookerAndStartIsBeforeAndEndIsAfterOrderByStartDesc(
                         booker, now, now);
                 break;
-            case "WAITING":
+            case WAITING:
                 bookings = bookingRepository.findByBookerAndStatusIsOrderByStartDesc(booker, BookingStatus.WAITING);
                 break;
-            case "REJECTED":
+            case REJECTED:
                 bookings = bookingRepository.findByBookerAndStatusIsOrderByStartDesc(booker, BookingStatus.REJECTED);
                 break;
-            case "ALL":
+            case ALL:
+            default:
                 bookings = bookingRepository.findByBookerOrderByStartDesc(booker);
                 break;
-            default:
-                throw new CustomValidationException("Unknown state: " + state);
         }
         return bookingMapper.toDto(bookings);
     }
 
     @Override
-    public List<BookingDtoResponse> getAllBookingsByOwner(long ownerId, String state) {
+    public List<BookingDtoResponse> getAllBookingsByOwner(long ownerId, BookingState state) {
         User owner = getUser(ownerId);
         List<Booking> bookings;
         LocalDateTime now = LocalDateTime.now();
         switch (state) {
-            case "PAST":
+            case PAST:
                 bookings = bookingRepository.findByItemOwnerAndEndIsBeforeOrderByStartDesc(owner, now);
                 break;
-            case "FUTURE":
+            case FUTURE:
                 bookings = bookingRepository.findByItemOwnerAndStartIsAfterOrderByStartDesc(owner, now);
                 break;
-            case "CURRENT":
+            case CURRENT:
                 bookings = bookingRepository.findByItemOwnerAndStartIsBeforeAndEndIsAfterOrderByStartDesc(
                         owner, now, now);
                 break;
-            case "WAITING":
+            case WAITING:
                 bookings = bookingRepository.findByItemOwnerAndStatusIsOrderByStartDesc(owner, BookingStatus.WAITING);
                 break;
-            case "REJECTED":
+            case REJECTED:
                 bookings = bookingRepository.findByItemOwnerAndStatusIsOrderByStartDesc(owner, BookingStatus.REJECTED);
                 break;
-            case "ALL":
+            case ALL:
+            default:
                 bookings = bookingRepository.findByItemOwnerOrderByStartDesc(owner);
                 break;
-            default:
-                throw new CustomValidationException("Unknown state: " + state);
         }
         return bookingMapper.toDto(bookings);
     }
