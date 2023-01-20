@@ -1,19 +1,17 @@
 package ru.practicum.shareit.user.dto;
 
 import lombok.Value;
+import ru.practicum.shareit.util.NullableNotBlank;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 
 @Value
-public class UserDto {
+public class UserPatchDto {
 
-    Long id;
-
-    @NotBlank
+    @NullableNotBlank
     String name;
 
     @Email
-    @NotBlank
+    @NullableNotBlank
     String email;
 }

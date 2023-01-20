@@ -3,77 +3,74 @@ package ru.practicum.shareit.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.AlreadyExistsException;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.dto.UserMapper;
+import ru.practicum.shareit.user.dto.*;
+import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.storage.UserStorage;
+import ru.practicum.shareit.user.storage.UserRepository;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Slf4j
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
-
-    private final UserStorage userStorage;
-
-    @Override
-    public UserDto add(UserDto userDto) {
-        userStorage.getByEmail(userDto.getEmail()).ifPresent(
-                foundUser -> {
-                    throw new AlreadyExistsException("User with email=" + userDto.getEmail() + " already exists.");
-                });
-        User user = userStorage.add(UserMapper.fromUserDto(userDto));
-        log.debug("UserServiceImpl: add user " + user + ".");
-        return UserMapper.toUserDto(user);
-    }
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Override
-    public List<UserDto> getAll() {
-        return userStorage.getAll()
-                .stream()
-                .map(UserMapper::toUserDto)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public UserDto getById(Long id) {
-        return UserMapper.toUserDto(
-                userStorage.getById(id)
+    public UserDto getById(long id) {
+        return userMapper.toDto(
+                userRepository.findById(id)
                         .orElseThrow(
-                                () -> new NotFoundException("User with id=" + id + " not found.")
+                                () -> new NotFoundException("UserServiceImpl: User with id=" + id + " not found.")
                         )
         );
     }
 
     @Override
-    public UserDto patch(Long id, UserDto patchDto) {
-        User user = userStorage.getById(id)
-                .orElseThrow(
-                        () -> new NotFoundException("User with id=" + id + " not found.")
-                );
-        String patchEmail = patchDto.getEmail();
-        if (Objects.nonNull(patchEmail)) {
-            userStorage.getByEmailWithoutId(patchEmail, id).ifPresent(
-                    foundUser -> {
-                        throw new AlreadyExistsException("User with email=" + patchEmail + " already exists.");
-                    });
-        }
-        UserMapper.patchFromDto(user, patchDto);
-        log.debug("UserServiceImpl: patch user " + user + ".");
-        return UserMapper.toUserDto(user);
+    public List<UserDto> getAll() {
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public void remove(Long id) {
-        if (!userStorage.remove(id)) {
-            throw new NotFoundException("User with id=" + id + " not found.");
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    public UserDto add(UserDto userDto) {
+        User user = userRepository.save(userMapper.fromDto(userDto));
+        log.debug("UserServiceImpl: add user " + user + ".");
+        return userMapper.toDto(user);
+    }
+
+    @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    public UserDto patch(long id, UserPatchDto patchDto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(
+                        () -> new NotFoundException("UserServiceImpl: user with id=" + id + " not found.")
+                );
+        userMapper.updateWithPatchDto(user, patchDto);
+        log.debug("UserServiceImpl: patch user " + user + ".");
+        return userMapper.toDto(user);
+    }
+
+    @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    public void delete(long id) {
+        try {
+            userRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            log.debug(e.getMessage(), e);
+            throw new NotFoundException("UserServiceImpl: user with id=" + id + " not found.");
         }
-        log.debug("UserServiceImpl: remove user id=" + id + ".");
+        log.debug("UserServiceImpl: delete user id=" + id + ".");
     }
 }
