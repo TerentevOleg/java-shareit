@@ -10,9 +10,9 @@ public interface BookingService {
 
     BookingDtoResponse getBookingById(long bookingId, long userId);
 
-    List<BookingDtoResponse> getAllBookingsByBooker(long bookerId, BookingState state);
+    List<BookingDtoResponse> getAllBookingsByBooker(long bookerId, BookingState state, long from, int size);
 
-    List<BookingDtoResponse> getAllBookingsByOwner(long ownerId, BookingState state);
+    List<BookingDtoResponse> getAllBookingsByOwner(long ownerId, BookingState state, long from, int size);
 
     BookingDtoResponse add(BookingDtoRequest dto, long userId);
 

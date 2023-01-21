@@ -9,7 +9,7 @@ public interface ItemService {
 
     ItemDtoResponse getById(long id, long userId);
 
-    List<ItemDtoResponse> getAll(long userId);
+    List<ItemDtoResponse> getAll(long userId, long from, int size);
 
     ItemDto add(ItemDto dto, long userId);
 
@@ -17,6 +17,6 @@ public interface ItemService {
 
     ItemDto patch(long itemId, ItemPatchDto dto, long userId);
 
-    List<ItemDto> search(String text);
+    List<ItemDto> search(String text, long from, int size);
 
 }

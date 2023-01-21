@@ -14,4 +14,5 @@ public class ItemDtoResponse {
     BookingDtoShort lastBooking;
     BookingDtoShort nextBooking;
     List<CommentDtoResponse> comments;
+    Long requestId;
 }
