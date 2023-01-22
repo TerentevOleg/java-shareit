@@ -34,5 +34,5 @@ public interface ItemRequestMapper {
 
     }
 
-    ItemRequest fromDto(ItemRequestDtoRequest dto);
+    ItemRequest fromDto(ItemRequestDtoRequest itemRequestDtoRequest);
 }

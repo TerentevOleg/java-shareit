@@ -1,10 +1,10 @@
 package ru.practicum.shareit.request.dto;
 
-import lombok.Data;
+import lombok.Value;
 
 import java.time.LocalDateTime;
 
-@Data
+@Value
 public class ItemRequestDtoResponse {
 
     Long id;
