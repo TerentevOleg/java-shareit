@@ -16,7 +16,7 @@ class BookingTest {
         booking1.setId(1L);
         booking1.setStatus(BookingStatus.APPROVED);
         booking2.setId(1L);
-        booking1.setStatus(BookingStatus.REJECTED);
+        booking2.setStatus(BookingStatus.REJECTED);
 
         assertEquals(booking1, booking2);
 

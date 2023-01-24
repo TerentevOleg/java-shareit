@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @JsonTest
 class BookingDtoShortTest {
     @Autowired
-    JacksonTester<BookingDtoShort> jacksonTester;
+    private JacksonTester<BookingDtoShort> jacksonTester;
 
     private final BookingDtoShort bookingDtoShort = new BookingDtoShort(1L,
             LocalDateTime.of(1993, 12, 3, 10, 5),

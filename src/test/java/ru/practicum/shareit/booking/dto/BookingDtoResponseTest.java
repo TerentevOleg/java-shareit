@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @JsonTest
 class BookingDtoResponseTest {
     @Autowired
-    JacksonTester<BookingDtoResponse> jacksonTester;
+    private JacksonTester<BookingDtoResponse> jacksonTester;
 
     private final String json = "{\n" +
             "  \"id\": 1,\n" +

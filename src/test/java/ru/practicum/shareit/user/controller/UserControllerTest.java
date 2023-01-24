@@ -10,14 +10,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.practicum.shareit.exception.AuthenticationErrorException;
+import ru.practicum.shareit.exception.CustomValidationException;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserPatchDto;
 import ru.practicum.shareit.user.service.UserService;
 
+import javax.validation.ConstraintViolationException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Set;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -68,6 +74,8 @@ class UserControllerTest {
         mvc.perform(get("/users/{id}", userId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedJson));
+
+        verify(userService, times(1)).getById(anyLong());
     }
 
     @Test
@@ -80,6 +88,8 @@ class UserControllerTest {
         mvc.perform(get("/users"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedDto)));
+
+        verify(userService, times(1)).getAll();
     }
 
     @Test
@@ -98,6 +108,8 @@ class UserControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedDto)));
+
+        verify(userService, times(1)).add(any());
     }
 
     @Test
@@ -108,6 +120,8 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+
+        verify(userService, never()).add(any());
     }
 
     @Test
@@ -118,6 +132,8 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+
+        verify(userService, never()).add(any());
     }
 
     @Test
@@ -128,6 +144,8 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+
+        verify(userService, never()).add(any());
     }
 
     @Test
@@ -146,6 +164,8 @@ class UserControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(dto)));
+
+        verify(userService, times(1)).patch(anyLong(), any());
     }
 
     @Test
@@ -156,6 +176,8 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+
+        verify(userService, never()).patch(anyLong(), any());
     }
 
     @Test
@@ -174,6 +196,8 @@ class UserControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(dto)));
+
+        verify(userService, times(1)).patch(anyLong(), any());
     }
 
     @Test
@@ -184,6 +208,8 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+
+        verify(userService, never()).patch(anyLong(), any());
     }
 
     @Test
@@ -194,6 +220,8 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+
+        verify(userService, never()).patch(anyLong(), any());
     }
 
     @Test
@@ -201,7 +229,61 @@ class UserControllerTest {
         long userId = 1;
         mvc.perform(delete("/users/{id}", userId))
                 .andExpect(status().isOk());
-        verify(userService, times(1))
-                .delete(userId);
+
+        verify(userService, times(1)).delete(userId);
+    }
+
+    @Test
+    void handleNotFoundException() throws Exception {
+        when(userService.getAll())
+                .thenThrow(new NotFoundException(""));
+
+        mvc.perform(get("/users"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void handleCustomValidationException() throws Exception {
+        when(userService.getAll())
+                .thenThrow(new CustomValidationException(""));
+
+        mvc.perform(get("/users"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void handleDataIntegrityViolationException() throws Exception {
+        when(userService.getAll())
+                .thenThrow(new DataIntegrityViolationException(""));
+
+        mvc.perform(get("/users"))
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    void handleAuthenticationErrorException() throws Exception {
+        when(userService.getAll())
+                .thenThrow(new AuthenticationErrorException(""));
+
+        mvc.perform(get("/users"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void handleConstraintViolationException() throws Exception {
+        when(userService.getAll())
+                .thenThrow(new ConstraintViolationException(Set.of()));
+
+        mvc.perform(get("/users"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void handleUnexpectedException() throws Exception {
+        when(userService.getAll())
+                .thenThrow(new RuntimeException(""));
+
+        mvc.perform(get("/users"))
+                .andExpect(status().isInternalServerError());
     }
 }

@@ -100,6 +100,8 @@ class BookingControllerTest {
                         .header("X-Sharer-User-Id", bookingBuilder.bookerId()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(bookingBuilder.buildDtoResponse())));
+
+        verify(bookingService, times(1)).add(any(), anyLong());
     }
 
     @Test
@@ -189,6 +191,8 @@ class BookingControllerTest {
                         .header("X-Sharer-User-Id", bookingBuilder.bookerId()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(responseDto)));
+
+        verify(bookingService, times(1)).getBookingById(anyLong(), anyLong());
     }
 
     @Test
@@ -208,6 +212,9 @@ class BookingControllerTest {
                         .header("X-Sharer-User-Id", bookingBuilder.bookerId()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(List.of(responseDto))));
+
+        verify(bookingService, times(1)).getAllBookingsByBooker(anyLong(), any(),
+                anyLong(), anyInt());
     }
 
     @Test
@@ -223,6 +230,9 @@ class BookingControllerTest {
                         .header("X-Sharer-User-Id", bookingBuilder.bookerId()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(List.of(responseDto))));
+
+        verify(bookingService, times(1)).getAllBookingsByBooker(anyLong(), any(),
+                anyLong(), anyInt());
     }
 
     @Test
@@ -285,6 +295,9 @@ class BookingControllerTest {
                         .header("X-Sharer-User-Id", bookingBuilder.itemOwnerId()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(List.of(responseDto))));
+
+        verify(bookingService, times(1)).getAllBookingsByOwner(anyLong(), any(),
+                anyLong(), anyInt());
     }
 
     @Test
@@ -300,6 +313,9 @@ class BookingControllerTest {
                         .header("X-Sharer-User-Id", bookingBuilder.itemOwnerId()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(List.of(responseDto))));
+
+        verify(bookingService, times(1)).getAllBookingsByOwner(anyLong(), any(),
+                anyLong(), anyInt());
     }
 
     @Test

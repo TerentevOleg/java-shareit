@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @JsonTest
 class CommentDtoRequestTest {
     @Autowired
-    JacksonTester<CommentDtoRequest> jacksonTester;
+    private JacksonTester<CommentDtoRequest> jacksonTester;
 
     private final CommentDtoRequest commentDtoRequest = new CommentDtoRequest("text");
     private final String json = "{\"text\": \"text\"}";

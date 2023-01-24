@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @JsonTest
 class ItemPatchDtoTest {
     @Autowired
-    JacksonTester<ItemPatchDto> jacksonTester;
+    private JacksonTester<ItemPatchDto> jacksonTester;
 
     private final String json = "{\n" +
             "  \"name\": \"name\",\n" +

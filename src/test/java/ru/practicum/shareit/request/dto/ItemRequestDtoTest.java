@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @JsonTest
 class ItemRequestDtoTest {
     @Autowired
-    JacksonTester<ItemRequestDto> jacksonTester;
+    private JacksonTester<ItemRequestDto> jacksonTester;
 
     private final String json = "{\n" +
             "  \"id\": 1,\n" +

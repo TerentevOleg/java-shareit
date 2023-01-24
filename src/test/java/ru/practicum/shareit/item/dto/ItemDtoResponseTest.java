@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @JsonTest
 class ItemDtoResponseTest {
     @Autowired
-    JacksonTester<ItemDtoResponse> jacksonTester;
+    private JacksonTester<ItemDtoResponse> jacksonTester;
 
     private final ItemDtoResponse itemDtoResponse = new ItemDtoResponse(
             1L, "name", "description", true, 2L,

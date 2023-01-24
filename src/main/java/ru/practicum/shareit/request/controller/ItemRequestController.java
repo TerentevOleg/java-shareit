@@ -46,9 +46,4 @@ public class ItemRequestController {
                                               @RequestHeader("X-Sharer-User-Id") long userId) {
         return itemRequestService.findById(requestId, userId);
     }
-
-
-
-
-
 }

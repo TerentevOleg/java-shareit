@@ -117,6 +117,8 @@ class ItemControllerTest {
                         .header("X-Sharer-User-Id", String.valueOf(userId)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(responseDto)));
+
+        verify(itemService, times(1)).getById(anyLong(), anyLong());
     }
 
     @Test
@@ -143,6 +145,8 @@ class ItemControllerTest {
                         .param("size", String.valueOf(size)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(List.of(responseDto))));
+
+        verify(itemService, times(1)).getAll(anyLong(), anyLong(), anyInt());
     }
 
     @Test
@@ -158,6 +162,8 @@ class ItemControllerTest {
                         .header("X-Sharer-User-Id", String.valueOf(userId)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(List.of(responseDto))));
+
+        verify(itemService, times(1)).getAll(anyLong(), anyLong(), anyInt());
     }
 
     @Test
@@ -205,6 +211,8 @@ class ItemControllerTest {
                         .param("size", String.valueOf(size)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(List.of(itemBuilder.buildDto()))));
+
+        verify(itemService, times(1)).search(anyString(), anyLong(), anyInt());
     }
 
     @Test
@@ -218,6 +226,8 @@ class ItemControllerTest {
                         .param("text", text))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(List.of(itemBuilder.buildDto()))));
+
+        verify(itemService, times(1)).search(anyString(), anyLong(), anyInt());
     }
 
     @Test
@@ -280,6 +290,8 @@ class ItemControllerTest {
                         .header("X-Sharer-User-Id", String.valueOf(userId)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(responseDto)));
+
+        verify(itemService, times(1)).add(any(), anyLong());
     }
 
     @Test
@@ -352,6 +364,8 @@ class ItemControllerTest {
                         .header("X-Sharer-User-Id", String.valueOf(userId)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(responseDto)));
+
+        verify(itemService, times(1)).patch(anyLong(), any(), anyLong());
     }
 
     @Test
@@ -374,6 +388,7 @@ class ItemControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(responseDto)));
 
+        verify(itemService, times(1)).patch(anyLong(), any(), anyLong());
     }
 
     @Test
@@ -414,6 +429,7 @@ class ItemControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(responseDto)));
 
+        verify(itemService, times(1)).patch(anyLong(), any(), anyLong());
     }
 
     @Test
@@ -452,6 +468,8 @@ class ItemControllerTest {
                         .header("X-Sharer-User-Id", String.valueOf(userId)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(responseDto)));
+
+        verify(itemService, times(1)).addComment(any(), anyLong(), anyLong());
     }
 
     @Test
