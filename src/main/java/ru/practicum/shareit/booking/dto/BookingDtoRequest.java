@@ -11,9 +11,11 @@ import java.time.LocalDateTime;
 public class BookingDtoRequest {
 
     @FutureOrPresent
+    @NotNull
     LocalDateTime start;
 
     @Future
+    @NotNull
     LocalDateTime end;
 
     @NotNull

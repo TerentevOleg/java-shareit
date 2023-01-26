@@ -2,17 +2,21 @@ package ru.practicum.shareit.item.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.Collections;
 import java.util.List;
 
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Validated
 public class ItemController {
     private final ItemService itemService;
 
@@ -23,8 +27,10 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDtoResponse> getAll(@RequestHeader("X-Sharer-User-Id") long userId) {
-        return itemService.getAll(userId);
+    public List<ItemDtoResponse> getAll(@RequestHeader("X-Sharer-User-Id") long userId,
+                                        @RequestParam(defaultValue = "0") @PositiveOrZero Long from,
+                                        @RequestParam(defaultValue = "10") @Positive Integer size) {
+        return itemService.getAll(userId, from, size);
     }
 
     @PostMapping
@@ -48,7 +54,9 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public List<ItemDto> search(@RequestParam String text) {
-        return text.isBlank() ? Collections.emptyList() : itemService.search(text);
+    public List<ItemDto> search(@RequestParam String text,
+                                @RequestParam(defaultValue = "0") @PositiveOrZero Long from,
+                                @RequestParam(defaultValue = "10") @Positive Integer size) {
+        return text.isBlank() ? Collections.emptyList() : itemService.search(text, from, size);
     }
 }

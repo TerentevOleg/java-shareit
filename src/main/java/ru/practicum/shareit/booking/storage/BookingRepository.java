@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking.storage;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -32,29 +33,29 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     Optional<Booking> findFirstByItemAndBookerAndEndBefore(Item item, User booker, LocalDateTime maxEnd);
 
-    List<Booking> findByBookerOrderByStartDesc(User booker);
+    List<Booking> findByBookerOrderByStartDesc(User booker, Pageable pageable);
 
-    List<Booking> findByItemOwnerOrderByStartDesc(User booker);
+    List<Booking> findByItemOwnerOrderByStartDesc(User booker, Pageable pageable);
 
-    List<Booking> findByBookerAndStartIsAfterOrderByStartDesc(User booker, LocalDateTime minStart);
+    List<Booking> findByBookerAndStartIsAfterOrderByStartDesc(User booker, LocalDateTime minStart, Pageable pageable);
 
-    List<Booking> findByBookerAndEndIsBeforeOrderByStartDesc(User booker, LocalDateTime maxEnd);
+    List<Booking> findByBookerAndEndIsBeforeOrderByStartDesc(User booker, LocalDateTime maxEnd, Pageable pageable);
 
-    List<Booking> findByBookerAndStatusIsOrderByStartDesc(User booker, BookingStatus status);
+    List<Booking> findByBookerAndStatusIsOrderByStartDesc(User booker, BookingStatus status, Pageable pageable);
 
-    List<Booking> findByItemOwnerAndStartIsAfterOrderByStartDesc(User booker, LocalDateTime minStart);
+    List<Booking> findByItemOwnerAndStartIsAfterOrderByStartDesc(User booker, LocalDateTime minStart, Pageable pageable);
 
-    List<Booking> findByItemOwnerAndEndIsBeforeOrderByStartDesc(User booker, LocalDateTime maxEnd);
+    List<Booking> findByItemOwnerAndEndIsBeforeOrderByStartDesc(User booker, LocalDateTime maxEnd, Pageable pageable);
 
-    List<Booking> findByItemOwnerAndStatusIsOrderByStartDesc(User booker, BookingStatus status);
+    List<Booking> findByItemOwnerAndStatusIsOrderByStartDesc(User booker, BookingStatus status, Pageable pageable);
 
     List<Booking> findByBookerAndStartIsBeforeAndEndIsAfterOrderByStartDesc(
-            User booker, LocalDateTime maxStart, LocalDateTime minEnd);
+            User booker, LocalDateTime maxStart, LocalDateTime minEnd, Pageable pageable);
 
     List<Booking> findByItemOwnerAndStartIsBeforeAndEndIsAfterOrderByStartDesc(
-            User booker, LocalDateTime maxStart, LocalDateTime minEnd);
+            User booker, LocalDateTime maxStart, LocalDateTime minEnd, Pageable pageable);
 
-    List<Booking> findAllByItemInAndStartAfterAndStatusIsOrderByStartDesc(
+    List<Booking> findAllByItemInAndStartAfterAndStatusIsOrderByStartAsc(
             List<Item> items, LocalDateTime minStart, BookingStatus status);
 
     List<Booking> findAllByItemInAndStartLessThanEqualAndStatusIsOrderByStartDesc(
