@@ -13,4 +13,4 @@ This application can:
 7. Create bookings.
 8. Comment on items.
 
-Stack: Spring Boot, Docker, Maven, Lombok, JDBC, PostgreSQL.
+Stack: Spring Boot, Spring Data JPA, PostgreSQL, Docker, Maven, Lombok.
