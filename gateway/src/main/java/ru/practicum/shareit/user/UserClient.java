@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -12,6 +13,7 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserPatchDto;
 
 @Service
+@Slf4j
 public class UserClient extends BaseClient {
     private static final String API_PREFIX = "/users";
 
@@ -26,23 +28,28 @@ public class UserClient extends BaseClient {
     }
 
     public ResponseEntity<Object> getById(long userId) {
-        return super.get("/" + userId);
+        log.debug("UserClient: get user by userId=" + userId + ".");
+        return get("/" + userId);
     }
 
     public ResponseEntity<Object> getAll() {
-        return super.get("");
+        log.debug("UserClient: get all users.");
+        return get("");
     }
 
     public ResponseEntity<Object> add(UserDto userDto) {
-        return super.post("", userDto);
+        log.debug("UserClient: add user by userId=" + userDto.getId() + ".");
+        return post("", userDto);
     }
 
     public ResponseEntity<Object> patch(long id, UserPatchDto patchDto) {
-        return super.patch("/" + id, patchDto);
+        log.debug("UserClient: patch user by userId=" + id + ".");
+        return patch("/" + id, patchDto);
     }
 
     public ResponseEntity<Object> delete(long id) {
-        return super.delete("/" + id);
+        log.debug("UserClient: delete user by userId=" + id + ".");
+        return delete("/" + id);
     }
 }
 

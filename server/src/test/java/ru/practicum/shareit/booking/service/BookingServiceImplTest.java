@@ -156,7 +156,7 @@ class BookingServiceImplTest {
         Mockito.lenient().when(userRepository.findById(userId))
                 .thenReturn(Optional.empty());
 
-        assertThrows(CustomValidationException.class,
+        assertThrows(NotFoundException.class,
                 () -> bookingService.add(requestDto, userId));
 
         Mockito.verify(bookingRepository, Mockito.never())

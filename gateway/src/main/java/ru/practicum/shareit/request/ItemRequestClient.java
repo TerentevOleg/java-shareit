@@ -1,5 +1,6 @@
 package ru.practicum.shareit.request;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import ru.practicum.shareit.request.dto.ItemRequestDtoRequest;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class ItemRequestClient extends BaseClient {
     private static final String API_PREFIX = "/requests";
 
@@ -25,11 +27,13 @@ public class ItemRequestClient extends BaseClient {
     }
 
     public ResponseEntity<Object> findById(long requestId, long userId) {
-        return super.get("/" + requestId, userId);
+        log.debug("ItemRequestClient: find item by userId=" + userId + " and requestId=" + requestId + ".");
+        return get("/" + requestId, userId);
     }
 
     public ResponseEntity<Object> findByRequester(long userId) {
-        return super.get("", userId);
+        log.debug("ItemRequestClient: find item by requesterId=" + userId + ".");
+        return get("", userId);
     }
 
     public ResponseEntity<Object> findByOtherUsers(long userId, long from, int size) {
@@ -37,10 +41,13 @@ public class ItemRequestClient extends BaseClient {
                 "from", from,
                 "size", size
         );
-        return super.get("/all?from={from}&size={size}", userId, parameters);
+        log.debug("ItemRequestClient: find item by otherUserId=" + userId + ".");
+        return get("/all?from={from}&size={size}", userId, parameters);
     }
 
     public ResponseEntity<Object> add(ItemRequestDtoRequest itemRequestDtoRequest, long userId) {
-        return super.post("", userId, itemRequestDtoRequest);
+        log.debug("ItemRequestClient: add item by userId=" + userId + " description=" +
+                itemRequestDtoRequest.getDescription() + ".");
+        return post("", userId, itemRequestDtoRequest);
     }
 }

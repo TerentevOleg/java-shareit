@@ -122,7 +122,6 @@ public class BookingServiceImpl implements BookingService {
             throw new CustomValidationException("BookingServiceImpl: item id=" + item.getId() + " isn't available.");
         }
         Booking booking = bookingMapper.fromDto(bookingDtoRequest);
-        checkDates(booking);
         User booker = getUser(userId);
 
         booking.setBooker(booker);
@@ -152,14 +151,6 @@ public class BookingServiceImpl implements BookingService {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("BookingServiceImpl: user with id=" +
                         userId + " not found."));
-    }
-
-    private void checkDates(@NotNull Booking booking) {
-        LocalDateTime start = Objects.requireNonNull(booking.getStart());
-        LocalDateTime end = Objects.requireNonNull(booking.getEnd());
-        if (end.isBefore(start) || end.equals(start) || start.isBefore(LocalDateTime.now())) {
-            throw new CustomValidationException("BookingServiceImpl: incorrect booking date-time.");
-        }
     }
 
     private static PageRequest formPageable(long from, Integer size, Sort sort) {
