@@ -24,3 +24,5 @@ This application can:
 
 ---
 ### Data storage
+
+![ER-диаграмма](src/main/resources/SchemaDb.png)
